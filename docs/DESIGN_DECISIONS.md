@@ -4,6 +4,7 @@ Log of design decisions, newest first. Visual-identity decisions are deferred un
 
 | Date | Decision | Rationale |
 |---|---|---|
+| 2026-10-18 | **Provider plan approved by user:** demo provider (dev/tests) → Travelpayouts/Aviasales Data API (launch; `observed` fares, affiliate redirect) → Duffel (live quotes, test mode first) → Aviasales Search API / Skyscanner when traffic qualifies | Amadeus Self-Service closed Jul 2026; Kiwi invite-only; Duffel's search-to-book fees punish monitoring-heavy usage; affiliate model avoids handling payments |
 | 2026-10-18 | Defer palette/typography until user references are inspected | Addendum §A: references are the source of truth; don't invent preferences |
 | 2026-10-18 | Tokens live in `frontend/src/styles/tokens.css` as CSS variables, mapped into Tailwind theme | Single source for all screens; swappable once references land |
 | 2026-10-18 | Fare source shown as icon + text badge | Addendum §B: never communicate status by colour alone |
