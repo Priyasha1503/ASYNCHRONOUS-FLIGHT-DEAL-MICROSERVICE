@@ -20,5 +20,6 @@ Design work (`DESIGN_BRIEF.md`) is gated on the user's references; backend phase
    Mitigation: abstraction + demo provider; Travelpayouts for observed fares; Duffel for live.
 2. **Provider cost** — Duffel charges for high search-to-book ratios. Mitigation: shared query cache,
    monitoring cadence budgets per provider.
-3. **Sandbox limits** — Docker Hub blocked here, so compose images can't be built in this environment;
-   verification uses native Postgres 16 + Redis 7 of the same major versions. Documented, not hidden.
+3. **Local toolchain** — development now happens on the user's Windows machine with Docker Desktop.
+   Node 22 is not installed natively yet; frontend commands run in a `node:22-alpine` container
+   (see README) until it is. Python 3.15 is the system default, so the backend pins 3.12 via uv.

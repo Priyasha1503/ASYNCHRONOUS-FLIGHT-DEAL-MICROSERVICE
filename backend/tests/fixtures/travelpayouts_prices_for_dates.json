@@ -1,0 +1,58 @@
+{
+  "_comment": "SHAPE FROM PUBLIC DOCS, NOT A RECORDED RESPONSE. Replace with output of scripts/travelpayouts_smoke.py once a token is available. Prices/flights are illustrative test data only.",
+  "success": true,
+  "currency": "usd",
+  "data": [
+    {
+      "origin": "LON",
+      "destination": "NYC",
+      "origin_airport": "LHR",
+      "destination_airport": "JFK",
+      "price": 412,
+      "airline": "BA",
+      "flight_number": "117",
+      "departure_at": "2026-12-10T08:25:00+00:00",
+      "return_at": "2026-12-17T18:30:00-05:00",
+      "transfers": 0,
+      "return_transfers": 0,
+      "duration": 885,
+      "duration_to": 470,
+      "duration_back": 415,
+      "link": "/search/LON1012NYC17121?t=BA17654025001765430100000470LHRJFK17660032001766027100000415JFKLHR_abc&search_date=01112026&expected_price_uuid=x&expected_price_currency=usd"
+    },
+    {
+      "origin": "LON",
+      "destination": "NYC",
+      "origin_airport": "LGW",
+      "destination_airport": "JFK",
+      "price": 365,
+      "airline": "DY",
+      "flight_number": "DY7015",
+      "departure_at": "2026-12-10T11:00:00+00:00",
+      "return_at": "2026-12-17T20:10:00-05:00",
+      "transfers": 1,
+      "return_transfers": 1,
+      "duration": 1390,
+      "duration_to": 720,
+      "duration_back": 670,
+      "link": "/search/LON1012NYC17121?t=DY_def&marker=someone-else"
+    },
+    {
+      "origin": "LON",
+      "destination": "NYC",
+      "origin_airport": "LHR",
+      "destination_airport": "JFK",
+      "price": 388,
+      "airline": "AA",
+      "flight_number": "101",
+      "departure_at": "2026-12-10T09:30:00",
+      "return_at": "2026-12-17T19:00:00-05:00",
+      "transfers": 0,
+      "return_transfers": 0,
+      "duration": 900,
+      "duration_to": 480,
+      "duration_back": 420,
+      "link": "/search/LON1012NYC17121?t=AA_bad_no_offset"
+    }
+  ]
+}

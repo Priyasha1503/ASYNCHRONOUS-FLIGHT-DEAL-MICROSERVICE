@@ -1,0 +1,102 @@
+# Local development stack. See README.md for commands.
+name: skyscout
+
+x-backend: &backend
+  build: ./backend
+  image: skyscout-backend:dev # one image shared by migrate/api/worker/beat
+  env_file:
+    - { path: .env, required: false }
+  environment:
+    DATABASE_URL: postgresql+psycopg://skyscout:skyscout@postgres:5432/skyscout
+    REDIS_URL: redis://redis:6379/0
+    # Email: by default real SMTP delivery to the local Mailpit inbox (http://localhost:8025).
+    # Set EMAIL_BACKEND/SMTP_* in .env to send through a real provider instead.
+    EMAIL_BACKEND: ${EMAIL_BACKEND:-smtp}
+    SMTP_HOST: ${SMTP_HOST:-mailpit}
+    SMTP_PORT: ${SMTP_PORT:-1025}
+    SMTP_STARTTLS: ${SMTP_STARTTLS:-false}
+    SMTP_FROM: ${SMTP_FROM:-SkyScout <alerts@skyscout.local>}
+  depends_on:
+    postgres: { condition: service_healthy }
+    redis: { condition: service_healthy }
+  restart: unless-stopped
+
+services:
+  # Local mail server + inbox UI for development: catches every email SkyScout sends.
+  mailpit:
+    image: axllent/mailpit:v1.21
+    ports: ["127.0.0.1:8025:8025"]
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: skyscout
+      POSTGRES_PASSWORD: skyscout
+      POSTGRES_DB: skyscout
+    ports: ["127.0.0.1:5432:5432"]
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./infra/postgres/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U skyscout -d skyscout"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes", "--maxmemory", "256mb",
+              "--maxmemory-policy", "volatile-lru"]
+    ports: ["127.0.0.1:6379:6379"]
+    volumes: [redisdata:/data]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  migrate:
+    <<: *backend
+    command: ["alembic", "upgrade", "head"]
+    restart: "no"
+
+  api:
+    <<: *backend
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "2"]
+    ports: ["127.0.0.1:8000:8000"]
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+    healthcheck:
+      test: ["CMD", "python", "-c",
+             "import urllib.request; urllib.request.urlopen('http://localhost:8000/health/live')"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+
+  worker:
+    <<: *backend
+    command: ["celery", "-A", "app.workers.celery_app:celery", "worker", "--loglevel=INFO",
+              "--concurrency=4"]
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+
+  beat:
+    <<: *backend
+    command: ["celery", "-A", "app.workers.celery_app:celery", "beat", "--loglevel=INFO",
+              "--schedule=/tmp/celerybeat-schedule"]
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+
+  web:
+    build: ./frontend
+    environment:
+      API_INTERNAL_URL: http://api:8000
+    ports: ["127.0.0.1:3000:3000"]
+    depends_on:
+      api: { condition: service_healthy }
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  redisdata:

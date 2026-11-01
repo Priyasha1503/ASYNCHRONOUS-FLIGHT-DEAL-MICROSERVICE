@@ -1,0 +1,127 @@
+/*
+ * SkyScout design tokens — single source of truth for every screen.
+ * Derived from design-references/ (twilight sky over sea, magenta/coral dusk clouds).
+ * See docs/DESIGN_BRIEF.md for the mapping from reference → token.
+ */
+
+:root {
+  /* ── Raw palette ─────────────────────────────────────────────── */
+  --night-950: #120a22;
+  --night-900: #1c1134;
+  --night-800: #2a1a4d;
+  --night-700: #3c2770; /* deep sea */
+  --violet-700: #5630b5;
+  --violet-600: #6b3fd4; /* brand primary */
+  --violet-500: #8a63e8;
+  --violet-300: #c3aef7;
+  --violet-100: #eee7ff;
+  --violet-50: #f7f3ff;
+  --periwinkle-400: #8ea2e8; /* upper sky, ref 1 */
+  --magenta-500: #d9407e; /* cloud undersides, refs 2–3 */
+  --magenta-600: #b92e68;
+  --coral-400: #ff8a66; /* sun glow */
+  --coral-500: #f26b4a;
+  --coral-700: #b2462a;
+  --sun-200: #ffd9b0;
+
+  /* ── Semantic: light ─────────────────────────────────────────── */
+  --bg: #faf8fd;
+  --surface: #ffffff;
+  --surface-2: #f4f0fa;
+  --surface-sunken: #efe9f8;
+  --border: #e4ddf0;
+  --border-strong: #cfc4e4;
+  --text: #1a1033;
+  --text-muted: #5d5478;
+  --text-subtle: #7a7194;
+
+  --primary: var(--violet-600);
+  --primary-hover: var(--violet-700);
+  --primary-fg: #ffffff;
+  --primary-soft: var(--violet-100);
+  --accent: var(--coral-500);
+  --accent-text: var(--coral-700);
+  --accent-soft: #ffeee8;
+  --ring: var(--violet-500);
+
+  --success: #0e7c5a;
+  --success-soft: #e3f6ee;
+  --warning: #93560a;
+  --warning-soft: #fdf1dc;
+  --danger: #c0264a;
+  --danger-soft: #fde8ec;
+  --info: #2f5bd3;
+  --info-soft: #e7edfd;
+
+  /* Data visualisation (ordered; colour is never the only signal) */
+  --chart-1: var(--violet-600);
+  --chart-2: var(--coral-500);
+  --chart-3: #5f7bd8;
+  --chart-4: var(--magenta-500);
+  --chart-grid: #e9e3f3;
+
+  /* ── Typography ──────────────────────────────────────────────── */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+  --font-mono: ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  /* ── Radius & elevation (shadows tinted with night violet) ───── */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-2xl: 28px;
+  --shadow-sm: 0 1px 2px rgb(28 17 52 / 0.06);
+  --shadow-md: 0 4px 14px -4px rgb(28 17 52 / 0.12), 0 1px 3px rgb(28 17 52 / 0.06);
+  --shadow-lg: 0 18px 40px -16px rgb(28 17 52 / 0.28), 0 2px 6px rgb(28 17 52 / 0.06);
+
+  /* ── Motion ──────────────────────────────────────────────────── */
+  --dur-fast: 120ms;
+  --dur-base: 200ms;
+  --dur-slow: 320ms;
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  color-scheme: light;
+}
+
+/* ── Semantic: dark (system preference unless explicitly forced light) ── */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #110a20;
+    --surface: #1a1230;
+    --surface-2: #231a3e;
+    --surface-sunken: #0d0719;
+    --border: #33285a;
+    --border-strong: #4a3d7a;
+    --text: #f3eeff;
+    --text-muted: #b4aacf;
+    --text-subtle: #8f86ad;
+    --primary: #a586f5;
+    --primary-hover: #b9a0f8;
+    --primary-fg: #140b26;
+    --primary-soft: #2c2052;
+    --accent: var(--coral-400);
+    --accent-text: #ffa98d;
+    --accent-soft: #3a1f26;
+    --ring: #a586f5;
+    --success: #4fd6a0;
+    --success-soft: #12322a;
+    --warning: #f5b451;
+    --warning-soft: #352712;
+    --danger: #ff7d93;
+    --danger-soft: #3a1522;
+    --info: #9db0f0;
+    --info-soft: #1c2448;
+    /* Validated with dataviz validate_palette.js on #1a1230 (lightness band L 0.48–0.67). */
+    --chart-1: #8a64e6;
+    --chart-2: #e5673f;
+    --chart-3: #8ea2e8;
+    --chart-4: #f06a9f;
+    --chart-grid: #2c2350;
+    --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
+    --shadow-md: 0 4px 14px -4px rgb(0 0 0 / 0.5);
+    --shadow-lg: 0 18px 40px -16px rgb(0 0 0 / 0.7);
+    color-scheme: dark;
+  }
+}

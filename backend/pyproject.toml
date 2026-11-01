@@ -1,0 +1,71 @@
+[project]
+name = "skyscout-backend"
+version = "0.1.0"
+description = "SkyScout AI — API, worker and scheduler"
+requires-python = ">=3.12,<3.14"
+dependencies = [
+    "fastapi>=0.115,<1.0",
+    "uvicorn[standard]>=0.32,<1.0",
+    "pydantic>=2.9,<3.0",
+    "pydantic-settings>=2.6,<3.0",
+    "email-validator>=2.2,<3.0",
+    "sqlalchemy>=2.0.36,<2.1",
+    "psycopg[binary]>=3.2,<4.0",
+    "alembic>=1.14,<2.0",
+    "redis>=5.2,<7.0",
+    "celery>=5.4,<6.0",
+    "argon2-cffi>=23.1,<26.0",
+    "prometheus-client>=0.21,<1.0",
+    "httpx>=0.28,<1.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3,<9.0",
+    "ruff>=0.8",
+    "mypy>=1.13,<2.0",
+]
+
+[tool.uv]
+package = false
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "S", "SIM", "RUF"]
+ignore = ["S101", "B008"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["app", "tests"]
+known-third-party = ["alembic"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S105", "S106", "S107"]
+"alembic/**" = ["E501"]
+# Seeded, non-cryptographic RNG is the point of the deterministic demo provider.
+"app/providers/demo.py" = ["S311"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+plugins = ["pydantic.mypy"]
+exclude = ["alembic/"]
+
+[[tool.mypy.overrides]]
+module = ["celery.*", "prometheus_client.*"]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+# Celery's task decorator is untyped.
+module = ["app.workers.*"]
+disallow_untyped_decorators = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+filterwarnings = [
+    # Starlette's TestClient migration to httpx2; harmless until we bump starlette's client.
+    "ignore:Using `httpx` with `starlette.testclient` is deprecated",
+]
